@@ -16,3 +16,12 @@ It is the basic Login system which can be used at any website that contain Login
   Profile contain image,name,gender,age etc. 
   
   Profile image is saved by hashing where if image changed last image will not be available on server (auto delete )that will reduce load on server. 
+  
+  
+  
+Technology used :       
+   1)django     
+   2)HTML     
+   3)Bootstrap4   
+   4)javascript   
+   5)python
