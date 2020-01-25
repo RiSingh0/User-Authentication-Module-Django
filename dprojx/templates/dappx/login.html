@@ -1,0 +1,99 @@
+{% extends 'dappx/base.html' %} {% block title %}Login{% endblock %} {% block body_block %}
+<div class="row no-gutters">
+	<div class="col-12 col-sm-6 col-md-8"></div>
+	<div class="col-6  col-md-4">
+		<div class="jumbotron">
+			<form method="post" action="{% url 'dappx:user_login' %}">
+				{% csrf_token %} {# A more "HTML" way of creating the login form#}
+				<h1 class="h3 mb-3 font-weight-normal" style="text-align: center"><i class="fa fa-sign-in" aria-hidden="true"></i>	Sign in</h1>
+				<hr />
+				<div class="row">
+					<div class="g-signin2" onclick="ClickLogin()" data-onsuccess="onSignIn"></div>
+					&nbsp; &nbsp;
+				</div>
+				<p style="text-align:center">OR</p>
+				{% if messages %}
+				<ul class="messages text-align:center">
+					{% for message in messages %}
+					<li {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				<input
+					type="username"
+					name="username"
+					id="username"
+					class="form-control"
+					placeholder="Username"
+					required=""
+					autofocus=""
+				/>
+				<br>
+				<input
+					type="password"
+					name="password"
+					id="password"
+					class="form-control"
+					placeholder="Password"
+					required=""
+				/>
+<br>
+				<button class="btn btn-success btn-block" type="submit">
+					<i class="fa fa-sign-in"></i> Sign in
+				</button>
+				<a class="fa fa-unlock" href="{% url 'dappx:password_reset' %}" id="forgot_pswd">&nbsp;Forgot password?</a>
+				<hr />
+				<!-- <p>Don't have an account!</p>  -->
+				<button
+					class="btn btn-primary btn-block"
+					onclick="location.href = '{% url 'dappx:register' %}';"
+					type="button"
+					id="btn-signup"
+				>
+					<i class="fa fa-user-plus"></i> 	Sign up New Account
+				</button>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %} {% block script %} {% csrf_token %}
+<script>
+		var clicked=false;//Global Variable
+		function ClickLogin()
+		{
+			clicked=true;
+		}
+	 function onSignIn(googleUser) {
+		if (clicked) {
+	 var profile = googleUser.getBasicProfile();
+	 console.log('ID: ' + profile.getId());
+	 var id_token = googleUser.getAuthResponse().id_token;
+	 console.log('Token: '+id_token)
+	 var xhr = new XMLHttpRequest();
+	xhr.open('POST', '{% url 'dappx:google_login' %}');
+	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	xhr.onload = function() {
+	console.log('Signed in as: ' + xhr.responseText);
+	$("html").html(xhr.responseText);
+	};
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie != '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+				// Does this cookie string begin with the name we want?
+				if (cookie.substring(0, name.length + 1) == (name + '=')) {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	}
+	xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+	xhr.send('id_token='+id_token+'&name='+profile.getName()+'&image='+profile.getImageUrl()+'&email='+profile.getEmail()+'&firstname='+profile.getGivenName()+'&lastname='+profile.getFamilyName());
+}
+	}
+</script>
+{% endblock %}

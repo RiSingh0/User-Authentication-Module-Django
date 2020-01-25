@@ -1,0 +1,86 @@
+{% extends "dappx/base.html" %} {% load static %} {% load crispy_forms_tags %} {% block body_block %}
+<div class="row no-gutters">
+	<div class="col-12 col-sm-6 col-md-8"></div>
+	<div class="col-6  col-md-4">
+		<div class="jumbotron">
+			<div class="”row”">
+				<h2>
+					<span>
+							<i class="fa fa-user-plus"></i>	Register &nbsp; or &nbsp;
+						<button class="btn btn-primary " onclick="location.href = '{% url 'dappx:user_login' %}';">
+								<i class="fa fa-sign-in"></i> Sign in
+						</button>
+					</span>
+				</h2>
+				<hr />
+				{% if messages %}
+				<ul class="messages text-align:center">
+					{% for message in messages %}
+					<li {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				<form enctype="multipart/form-data" method="POST">
+					{% csrf_token %}
+					{{ user_form | crispy }}
+					{{ profile_form | crispy }}
+					<div id="div_id_profile_pic" class="form-group"> <label for="id_profile_pic" class="col-form-label ">
+						<div class="text-center card-body">{% load static %}
+							<img src="{% static 'dappx/profile.png' %}" id="profile-img-tag" class="rounded-circle  img-thumbnail " style="width:80%;max-width:400px;box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;" alt="picture">
+							<br><figcaption>Profile Picture</figcaption>
+						</div>
+            </label>
+						<div class=""> <input style="display: none;" type="file" name="profile_pic" accept="image/*" class="clearablefileinput" id="id_profile_pic"> </div> </div>
+						<div class='row justify-content-center'><div class="g-recaptcha" data-sitekey="6LfBOLEUAAAAAIH6WhDPzvtMaoWmsul0gZz-oF53"></div></div>
+						<br>
+					<div class="controls">
+						<button class="btn btn-success btn-block"><i class="fa fa-user-plus"></i>	Register</button>
+					</div>
+				</form>
+
+
+			</div>
+		</div>
+	</div>
+	{% endblock %}
+</div>
+{% block script %}
+<script>
+$("input[type='image']").click(function () {
+	$("input[id='id_profile_pic']").click();
+});
+function readURL(input) {
+	if (input.files && input.files[0]) {
+		var reader = new FileReader();
+
+		reader.onload = function (e) {
+			$('#profile-img-tag').attr('src', e.target.result);
+		}
+		reader.readAsDataURL(input.files[0]);
+	}
+}
+$("#id_profile_pic").change(function () {
+	readURL(this);
+});
+$(function(){
+  function rescaleCaptcha(){
+    var width = $('.g-recaptcha').parent().width();
+    var scale;
+    if (width < 302) {
+      scale = width / 302;
+    } else{
+      scale = 1.0; 
+    }
+
+    $('.g-recaptcha').css('transform', 'scale(' + scale + ')');
+    $('.g-recaptcha').css('-webkit-transform', 'scale(' + scale + ')');
+    $('.g-recaptcha').css('transform-origin', '0 0');
+    $('.g-recaptcha').css('-webkit-transform-origin', '0 0');
+  }
+
+  rescaleCaptcha();
+  $( window ).resize(function() { rescaleCaptcha(); });
+
+});
+</script>
+{% endblock %}

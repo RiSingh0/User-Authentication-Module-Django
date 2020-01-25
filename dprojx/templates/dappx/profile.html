@@ -1,0 +1,147 @@
+{% extends 'dappx/base.html' %} {% block title %}Login{% endblock %} {% block body_block %}{% load crispy_forms_tags %}
+<div class="container">
+	<nav>
+		<div class="nav nav-tabs" id="nav-tab" role="tablist">
+			<a
+				class="nav-item nav-link active green ace-icon fa fa-user bigger-120"
+				id="nav-home-tab"
+				data-toggle="tab"
+				href="#nav-home"
+				role="tab"
+				aria-controls="nav-home"
+				aria-selected="true"
+			>
+				View Profile</a
+			>
+			<a
+				class="nav-item nav-link fa fa-edit"
+				id="nav-profile-tab"
+				data-toggle="tab"
+				href="#nav-profile"
+				role="tab"
+				aria-controls="nav-profile"
+				aria-selected="false"
+			>
+				Edit Profile</a
+			>
+			<a
+				class="nav-item nav-link fa fa-cogs "
+				id="nav-contact-tab"
+				data-toggle="tab"
+				href="#nav-settings"
+				role="tab"
+				aria-controls="nav-Settings"
+				aria-selected="false"
+			>
+				Settings</a
+			>
+		</div>
+	</nav>
+	<div class="tab-content">
+		<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="home-tab">
+			<div class="row no-gutters">
+				<div class="col-6  col-md-4">
+					<div class="jumbotron card">
+							{% if messages %}
+				<ul class="messages text-align:center">
+					{% for message in messages %}
+					<li {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+						<div class="text-center card-body">
+								{% if user.userprofileinfo.profile_pic%}
+								<img src="/media/{{ user.userprofileinfo.profile_pic }}" class="rounded-circle  img-thumbnail " style="width:80%;max-width:400px;box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;" alt="picture">
+								{% else %}
+								{% load static %}
+								<img src="{% static 'dappx/profile.png' %}" class="rounded-circle  img-thumbnail " style="width:80%;max-width:400px;box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;" alt="picture">
+								{% endif %}
+							<br />
+							<figcaption>Profile Picture</figcaption>
+						</div>
+						<h4 class="text-center">{{ user.username }}</h4>
+					</div>
+				</div>
+				<br />
+				<div class="col-12 col-sm-6 col-md-8">
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item">
+							<h6>User Name : {{ user.username }}</h6>
+						</li>
+						<li class="list-group-item">
+							<h6>Name : {{ user.first_name }} {{ user.last_name }}</h6>
+						</li>
+						<li class=" list-group-item">
+							<h6><i class="fa fa-envelope"></i> Email : {{ user.email }}</h6>
+						</li>
+						{% if  user.userprofileinfo.Gender %}
+						<li class="list-group-item">
+							<h6><i class="fa fa-venus-mars"></i> Gender : {{ user.userprofileinfo.Gender }}</h6>
+						</li>
+						{% else %}
+						<li class="list-group-item">
+							<h6><i class="fa fa-venus-mars"></i> Gender : Not given</h6>
+						</li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="profile-tab">
+			<form enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <div id="div_id_profile_pic" class="form-group"> <label for="id_profile_pic" class="col-form-label ">
+                    <div class="text-center card-body">
+						{% if user.userprofileinfo.profile_pic %}
+						<img src="/media/{{ user.userprofileinfo.profile_pic }}" id="profile-img-tag" class="rounded-circle  img-thumbnail " style="width:80%;max-width:400px;box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;" alt="picture">
+						{% else %}
+						{% load static %}
+						<img src="{% static 'dappx/profile.png' %}" id="profile-img-tag" class="rounded-circle  img-thumbnail " style="width:80%;max-width:400px;box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;" alt="picture">
+						{% endif %}
+                        <br><figcaption>Profile Picture</figcaption>
+                    </div>
+        </label>
+                    <div class=""> <input style="display: none;" type="file" name="profile_pic" accept="image/*" class="clearablefileinput" id="id_profile_pic"> </div> </div>
+				{{ user_form | crispy }}
+				{{ profile_form | crispy }}
+				<div class="controls">
+					<button class="btn btn-success "><i class="fa fa-floppy-o fa-5" aria-hidden="true"></i></button>
+				</div>
+			</form>
+		</div>
+		<div class="tab-pane fade" id="nav-settings" role="tabpanel" aria-labelledby="messages-tab">
+			<div class="list-group">
+				<button
+					type="submit"
+					onclick="window.location.href='{% url 'dappx:change_password' %}'"
+					class="list-group-item list-group-item-action"
+				>
+					<i class="fa fa-key"></i> Change Password
+				</button>
+				<button type="button" onclick="window.location.href='{% url 'dappx:delete_account' %}'" class="list-group-item list-group-item-action">
+						<i class="fa fa-trash" aria-hidden="true"></i>	Deactivate Account</button>
+				<button type="button" class="list-group-item list-group-item-action">other soon</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %} {% block script %}
+<script>
+    $("input[type='image']").click(function () {
+        $("input[id='id_profile_pic']").click();
+    });
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#profile-img-tag').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    $("#id_profile_pic").change(function () {
+        readURL(this);
+    });
+</script>
+{% endblock %}

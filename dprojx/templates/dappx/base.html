@@ -1,0 +1,113 @@
+{% load crispy_forms_tags %}{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<meta
+			name="google-signin-client_id"
+			content="222571355972-iqurv219kufrepa3uqjlqoumqg62ke2r.apps.googleusercontent.com"
+		/>
+
+		<!-- Bootstrap CSS -->
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+			integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+		<title>{% block title %}{% endblock %}</title>
+		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+		
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top ">
+			<a class=" navbar-brand" href="#">Navbar</a>
+			<button
+				class="navbar-toggler"
+				type="button"
+				data-toggle="collapse"
+				data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent"
+				aria-expanded="false"
+				aria-label="Toggle navigation"
+			>
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class=" nav-item"><a class=" navbar-brand" href="{% url 'index' %}">DJANGO</a></li>
+					<li class="nav-item"><a class=" nav-link " href="{% url 'admin:index' %}">Admin</a></li>
+					<li class="nav-item"><a class=" nav-link" href="{% url 'dappx:register' %}"><i class="fa fa-user-plus"></i>	Register</a></li>
+					{# Some logic on what to display for last item#} {% if user.is_authenticated %}
+					<li class="nav-item"><a class="nav-link" href="{% url 'dappx:logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i>	Logout</a></li>
+					{% else %}
+					<li class="nav-item"><a class=" nav-link" href="{% url 'dappx:user_login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i>		Login</a></li>
+					{% endif %}
+					<li class="nav-item dropdown">
+						<a
+							class=" nav-link dropdown"
+							href="#"
+							id="navbarDropdown"
+							role="button"
+							data-toggle="dropdown"
+							aria-haspopup="true"
+							aria-expanded="false"
+						>
+							Dropdown	<i class="fa fa-angle-double-down"></i>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="#">Action</a>
+							<a class="dropdown-item" href="#">Another action</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="#">Something else here</a>
+						</div>
+					</li>
+				</ul>
+				<ul class="navbar-nav mr-3  ">
+					<li class="nav-item ">
+						{% if user.is_authenticated %}
+						<a href="{% url 'dappx:profile' %}">
+								{% if user.userprofileinfo.profile_pic%}
+								<img src="/media/{{user.userprofileinfo.profile_pic}}" class="rounded-circle   " alt="Profile Picture" width="40" height="40" title='Profile Picture'>
+								{% else %}
+								{% load static %}
+								<img src="{% static 'dappx/profile.png' %}" class="rounded-circle   " alt="Profile Picture" width="40" height="40" title='Profile Picture'>
+								{% endif %}
+					    </a>
+						{% endif %}
+					</li>
+				  </ul>
+				<form class="form-inline my-2 my-lg-0">
+					<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+				</form>
+			</div>
+		</nav>
+
+		{% block body_block %} {% endblock %}
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script
+			src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+			integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+			integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+			crossorigin="anonymous"
+		></script>
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		{% block script %}{% endblock %}
+	</body>
+</html>

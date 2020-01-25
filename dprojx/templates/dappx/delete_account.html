@@ -1,0 +1,16 @@
+{% extends 'dappx/base.html' %}{% load crispy_forms_tags %} 
+
+{% block title %}Deactivate{% endblock %}
+
+{% block body_block %}
+<div class="jumbotron container">
+<h3>Deactivate your account</h3>
+<br>
+<form method="POST">
+  {% csrf_token %}
+  <input class="form-control" type="email" name="email" id="email" placeholder="Enter the registered Email!">
+  <br>
+  <input class="btn btn-success " type="submit" value="Deactivate my account">
+</form>
+</div>
+{% endblock %}

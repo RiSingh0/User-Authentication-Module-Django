@@ -1,0 +1,6 @@
+{% autoescape off %}
+Hi {{ user.username }},
+Please click on the link to confimly deactivate your Account,
+Once the account deactivated, You can not Activate again.
+http://{{ domain }}{% url 'dappx:deactivate' uidb64=uid token=token %}
+{% endautoescape %}
